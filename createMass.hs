@@ -29,7 +29,7 @@ createMassApp =
      text <- getLine
      createMass src target text
 	 
-	 -- API
+-- API
 	 
 removeNonLetters :: String -> [String]
 removeNonLetters s = map (\x -> filter(isLetter) x) (words s)

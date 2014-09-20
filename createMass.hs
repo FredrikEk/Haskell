@@ -1,26 +1,44 @@
 import System.Directory
 import Data.Char ( isLetter )
 
---"Readable" Code
+-- Main
 
-createMass :: FilePath -> String -> IO ()
-createMass file text = 
-  do s <- readFile file
-     writeFile "MassTell.txt" (addText (removeNonLetters s) text) 
+createMass :: FilePath -> FilePath -> String -> IO ()
+createMass srcFile targetFile text = 
+  do s <- readFile srcFile
+     writeFile targetFile (addText (removeNonLetters s) text) 
+	 
+-- Oneliner
 
+createMass2 :: FilePath -> FilePath -> String -> IO ()
+createMass2 srcFile targetFile text = 
+  do s <- readFile srcFile
+     writeFile targetFile 
+	 (concat (map (\x -> "/tell " ++ x ++ " " ++ text ++ "\n" ++ "/delay 5000\n") 
+	             (map (\x -> filter(isLetter) x) (words s))))
+
+-- Interface
+
+createMassApp :: IO()
+createMassApp = 
+  do putStrLn ("Please specify the filepath to file containing the character names> ")
+     src <- getLine
+     putStrLn ("Please specify the filepath where you want your script to go> ")	 
+     target <- getLine
+     putStrLn ("Please specify the text you want to send> ")
+     text <- getLine
+     createMass src target text
+	 
+	 -- API
+	 
 removeNonLetters :: String -> [String]
 removeNonLetters s = map (\x -> filter(isLetter) x) (words s)
 
 addText :: [String] -> String -> String
 addText s text = 
         concat (map (\x -> "/tell " ++ x ++ " " ++ text ++ "\n" ++ "/delay 5000\n") s)
+		
 
---Oneliner
 
-createMass2 :: FilePath -> String -> IO ()
-createMass2 file text = 
-  do s <- readFile file
-     writeFile "MassTell.txt" 
-	 (concat (map (\x -> "/tell " ++ x ++ " " ++ text ++ "\n" ++ "/delay 5000\n") 
-	             (map (\x -> filter(isLetter) x) (words s))))
+
        

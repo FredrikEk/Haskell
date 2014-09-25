@@ -1,5 +1,6 @@
 import System.Directory
 import Data.Char ( isLetter )
+import Data.Char ( isDigit )
 
 -- Main
 
@@ -15,7 +16,7 @@ createMass2 srcFile targetFile text =
   do s <- readFile srcFile
      writeFile targetFile 
 	 (concat (map (\x -> "/tell " ++ x ++ " " ++ text ++ "\n" ++ "/delay 5000\n") 
-	             (map (\x -> filter(isLetter) x) (words s))))
+	             (map (\x -> filter(\y -> isLetter y || isDigit y) x) (words s))))
 
 -- Interface
 
@@ -32,7 +33,7 @@ createMassApp =
 -- API
 	 
 removeNonLetters :: String -> [String]
-removeNonLetters s = map (\x -> filter(isLetter) x) (words s)
+removeNonLetters s = map (\x -> filter(\y -> isLetter y || isDigit y) x) (words s)
 
 addText :: [String] -> String -> String
 addText s text = 
